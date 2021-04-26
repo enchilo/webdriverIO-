@@ -16,7 +16,7 @@ exports.config = {
   // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
   // directory is where your package.json resides, so `wdio` will be called from there.
   //
-  specs: ["./test/specs/**/receivePakage.js"],
+  specs: ["./test/specs/**/chai.js"],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
@@ -105,7 +105,7 @@ exports.config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: "",
+  baseUrl: "'http://localhost'",
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
@@ -121,7 +121,34 @@ exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ["chromedriver"],
+  services: [
+        ['selenium-standalone', {
+            logPath: 'logs',
+            installArgs: {
+                drivers: {
+                    chrome: { version: '90.0.4430.85' },
+                    // firefox: { version: '0.26.0' }
+                }
+            },
+            // args: {
+            //     drivers: {
+            //         chrome: { version: '90.0.4430.85' },
+            //         firefox: { version: '0.26.0' }
+            //     }
+            // },
+            installArgs: {
+                version : "3.141.59",
+                baseURL : "https://selenium-release.storage.googleapis.com",
+                drivers : {
+                    chrome : {
+                        version : "90.0.4430.85",
+                        arch    : process.arch,
+                        baseURL : "https://chromedriver.storage.googleapis.com",
+                    }
+                }
+            },
+        }]
+    ],
 
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -143,9 +170,21 @@ exports.config = {
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
   // see also: https://webdriver.io/docs/dot-reporter.html
-  reporters: ["spec"],
-
-  //
+  // jenkins 
+  // reporters: [  
+  //       ['junit', {
+  //           outputDir: './reporter'
+  //       }]
+  //   ],
+  // // allure
+  reporters: [
+    ['allure', {
+      outputDir: 'allure-results',
+      },
+    ],
+  ],
+    
+  
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
   mochaOpts: {
